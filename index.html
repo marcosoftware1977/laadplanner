@@ -404,7 +404,16 @@ document.getElementById('clearBtn')
     'click',
     clearStopTime
 );
+document.getElementById('efluxBtn')
+.addEventListener('click', () => {
 
+    window.open(
+        'https://chargestation.road.io/nl/evse/NLEFLEV3627841',
+        '_blank'
+    );
+
+});
+    
 if (
     localStorage.getItem('stopTime')
 ) {
