@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Laadplanner v3.1</title>
+<title>Laadplanner v3.2</title>
 
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#2563eb">
@@ -40,10 +40,6 @@ button{
     background:#2563eb;
     font-size:17px;
     font-weight:600;
-}
-
-.green{
-    background:#16a34a;
 }
 
 .red{
@@ -120,9 +116,8 @@ button{
 
 <div id="res" class="result" style="display:none"></div>
 
-
 <div class="version">
-v3.1
+v3.2
 </div>
 
 <script>
@@ -204,16 +199,6 @@ function updatePower() {
     saveSettings();
 }
 
-async function requestNotifications() {
-
-    if (Notification.permission !== 'granted') {
-
-        await Notification.requestPermission();
-    }
-
-    alert('Notificaties ingesteld');
-}
-
 function unlockAudio() {
 
     if (audioUnlocked) return;
@@ -261,33 +246,11 @@ function triggerAlarm() {
 
     document.body.classList.add('flash');
 
-    
-    if (Notification.permission === 'granted') {
-
-        new Notification(
-            '🔋 Tijd om laden te stoppen',
-            {
-                body:
-                    'Open E-Flux en stop de laadsessie'
-            }
-        );
-    }
-
     playBeep();
 
     alarmInterval =
         setInterval(playBeep, 1000);
 }
-
-function stopAlarm() {
-
-    clearInterval(alarmInterval);
-
-    alarmInterval = null;
-
-    document.body.classList.remove('flash');
-
-    }
 
 function updateCountdown() {
 
@@ -409,12 +372,17 @@ function clearStopTime() {
 
     localStorage.removeItem('stopTime');
 
+    clearInterval(alarmInterval);
+
+    alarmInterval = null;
+
+    document.body.classList.remove('flash');
+
     location.reload();
 }
 
 loadSettings();
 updatePower();
-if ('Notification' in window && Notification.permission === 'default') { Notification.requestPermission(); }
 
 [car, cur, tar, amp, loss]
 .forEach(el =>
@@ -427,30 +395,10 @@ if ('Notification' in window && Notification.permission === 'default') { Notific
 document.getElementById('calcBtn')
 .addEventListener('click', calculate);
 
-document.getElementById('notifyBtn')
-.addEventListener(
-    'click',
-    requestNotifications
-);
-
-document.getElementById('testSoundBtn')
-.addEventListener('click', () => {
-
-    unlockAudio();
-
-    playBeep();
-});
-
 document.getElementById('clearBtn')
 .addEventListener(
     'click',
     clearStopTime
-);
-
-stopAlarmBtn
-.addEventListener(
-    'click',
-    stopAlarm
 );
 
 if (
